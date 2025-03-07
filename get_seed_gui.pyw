@@ -1,3 +1,6 @@
+# .\.venv\Scripts\Activate.ps1
+# pip install pyperclip nbtlib watchdog pywin32
+
 import os
 import subprocess
 import sys
@@ -20,53 +23,6 @@ script_path = os.path.abspath(__file__)
 script_dir = os.path.dirname(script_path)
 
 global seed_button
-
-
-def check_installation_status():
-    check_file = os.path.join(script_dir, "check_package.txt")
-
-    # 檢查檔案是否存在，不存在則建立
-    if not os.path.exists(check_file):
-        with open(check_file, "w") as f:
-            f.write("0")
-        return False
-
-    # 讀取安裝狀態
-    with open(check_file, "r") as f:
-        status = f.read().strip()
-        return status == "1"
-
-
-def install_required_packages():
-    if check_installation_status():
-        return
-
-    required_packages = {
-        "nbtlib": "nbtlib",
-        "pywin32": "pywin32",
-        "pyperclip": "pyperclip",
-        "watchdog": "watchdog",
-    }
-
-    for package, pip_name in required_packages.items():
-        try:
-            module = __import__(package)
-            if hasattr(module, "__version__"):
-                print(f"{package} {module.__version__} 已安裝")
-            else:
-                print(f"{package} 已安裝")
-        except ImportError:
-            print(f"正在安裝 {package}...")
-            subprocess.check_call(
-                [sys.executable, "-m", "pip", "install", pip_name],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.STDOUT,
-            )
-            print(f"{package} 安裝成功")
-
-    # 更新安裝狀態
-    with open(os.path.join(script_dir, "check_package.txt"), "w") as f:
-        f.write("1")
 
 
 def is_minecraft_active():
@@ -261,7 +217,6 @@ def toggle_topmost():
 
 
 if __name__ == "__main__":
-    install_required_packages()
 
     window = tk.Tk()
 
@@ -309,8 +264,6 @@ if __name__ == "__main__":
     style.theme_use("vista")  # 更改為您想要的主題
     window.title("structure_finder")
     window.geometry("320x400")  # 宽度x高度
-
-    
 
     mode = StringVar(value="new")
     mode.trace("w", toggle_seed_button)
